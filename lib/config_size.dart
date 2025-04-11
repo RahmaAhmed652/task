@@ -1,21 +1,34 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 
 class ConfigSize extends StatelessWidget {
   final Widget mobile;
   final Widget web;
+  final double breakpoint;
 
-  const ConfigSize({required this.mobile, required this.web});
+  const ConfigSize({
+    required this.mobile,
+    required this.web,
+    this.breakpoint = 600, // يمكن تغييره حسب الحاجة
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).size.width < 600) {
-      return mobile;
-    } else {
-      return web;
-    }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < breakpoint) {
+          return mobile;
+        } else {
+          return web;
+        }
+      },
+    );
   }
 
-  static isWeb(BuildContext context) {}
+  static bool isWeb(BuildContext context, {double breakpoint = 600}) {
+    return MediaQuery.of(context).size.width >= breakpoint;
+  }
 
-  static isMobile(BuildContext context) {}
+  static bool isMobile(BuildContext context, {double breakpoint = 600}) {
+    return MediaQuery.of(context).size.width < breakpoint;
+  }
 }
